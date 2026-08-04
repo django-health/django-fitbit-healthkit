@@ -1,6 +1,6 @@
 import json
 import urllib
-from datetime import datetime
+from datetime import date
 
 import requests
 from django.conf import settings
@@ -128,7 +128,7 @@ def fitbit_subscription(request: HttpRequest) -> HttpResponse:
         FitbitNotification(
             user=FitbitUser.objects.get(fitbit_id=d["ownerId"]),
             notification=d["collectionType"],
-            date=datetime.strptime(d["date"], "%Y-%m-%d").date(),
+            date=date.fromisoformat(d["date"]),
         )
         for d in data
     ]

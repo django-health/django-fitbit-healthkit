@@ -8,6 +8,11 @@ from django.db import models
 
 from .util import encoded_secret
 
+
+class FitbitError(Exception):
+    """Raised when the Fitbit OAuth handshake or token refresh fails."""
+
+
 logger = logging.getLogger(__name__)
 
 
@@ -68,7 +73,7 @@ class FitbitUser(models.Model):
         except requests.exceptions.RequestException as e:
             logger.info(f"Error in fitbit token request: {e}")
             return (None, e)
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 -- boundary: all errors returned as (None, e)
             logger.info(f"Error in fitbit token request: {e}")
             return (None, e)
 
@@ -82,9 +87,9 @@ class FitbitUser(models.Model):
         reauth_data, err = self.get_new_tokens()
         if err is not None:
             logger.info((reauth_data, err))
-            raise Exception(f"Error in fitbit oauth handshake: {err}")
+            raise FitbitError(f"Error in fitbit oauth handshake: {err}")
         elif reauth_data is None or any(x not in reauth_data for x in required_keys):
-            raise Exception(f"Missing keys in returned response: {reauth_data}")
+            raise FitbitError(f"Missing keys in returned response: {reauth_data}")
         # update the user credentials with the new token
         self.access_token = reauth_data["access_token"]
         self.refresh_token = reauth_data["refresh_token"]
@@ -97,7 +102,7 @@ class FitbitUser(models.Model):
         self,
         request_type: str,
         *args,
-        headers: Dict | None = {},
+        headers: Dict | None = None,
         max_fetch_attempts: int = 3,
         **kwargs,
     ) -> tuple[requests.models.Response | None, Exception | None]:
@@ -112,12 +117,12 @@ class FitbitUser(models.Model):
             logger.info("Token expired, will attempt an update")
             try:
                 self.update_tokens()
-            except Exception as e:
+            except FitbitError as e:
                 return (None, e)
 
         fetch_attempts = 0
 
-        headers = {"authorization": f"Bearer {self.access_token}", **headers}
+        headers = {"authorization": f"Bearer {self.access_token}", **(headers or {})}
 
         while fetch_attempts < max_fetch_attempts:
             logger.info(f"Fetch attempt #{fetch_attempts}")
@@ -136,7 +141,7 @@ class FitbitUser(models.Model):
             if response.status_code == 401:
                 try:
                     self.update_tokens()
-                except Exception as e:
+                except FitbitError as e:
                     return (None, e)
                 headers["authorization"] = f"Bearer {self.access_token}"
                 # make another fetch attempt

@@ -3,7 +3,7 @@ from datetime import date
 
 import requests
 
-from .models import FitbitUser
+from .models import FitbitError, FitbitUser
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +34,7 @@ def check_fitbit_access_profile(fitbitUser: FitbitUser) -> bool:
 def check_fitbit_access(fitbitUser: FitbitUser) -> bool:
     try:
         fitbitUser.update_tokens()
-    except Exception as e:
+    except FitbitError as e:
         logger.info(f"Error wrapped in check_fitbit_access: {e}")
         return False
     return True

@@ -86,7 +86,7 @@ def remove_fitbit_connection(connection_expected=False):
             print("App not found within 5 seconds.")
 
         if connection_expected and not app_available:
-            raise Exception("Expected to find the app, but it was not found.")
+            raise RuntimeError("Expected to find the app, but it was not found.")
 
         if app_available:
             # # get the li container here

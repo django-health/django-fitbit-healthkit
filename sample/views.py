@@ -1,13 +1,13 @@
 # a simple view that just loads index.html
 # and puts the user in the context
 import logging
-from datetime import date
 
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
+from django.utils import timezone
 
 from django_fitbit_healthkit.methods import (
     activity_intraday_by_date,
@@ -29,14 +29,16 @@ def index(request: HttpRequest) -> HttpResponse:
         context["connection"] = access
         if access:
             if "activity" in request.user.fitbituser.scopes:
-                resp, _ = daily_activity_summary(request.user.fitbituser, date.today())
+                resp, _ = daily_activity_summary(
+                    request.user.fitbituser, timezone.localdate()
+                )
                 context["daily_activity"] = resp.json()
 
                 # intraday is "special"
                 # either a personal API token or
                 # the app must have been granted this special access from fitbit
                 intraday, err = activity_intraday_by_date(
-                    request.user.fitbituser, "steps", date.today(), "15min"
+                    request.user.fitbituser, "steps", timezone.localdate(), "15min"
                 )
                 logger.info((intraday, err))
                 # if we get a 404 on intraday, it's because we don't have access to that endpoint
@@ -47,7 +49,7 @@ def index(request: HttpRequest) -> HttpResponse:
 
             if "sleep" in request.user.fitbituser.scopes:
                 context["sleep_log"] = sleep_log_by_date(
-                    request.user.fitbituser, date.today()
+                    request.user.fitbituser, timezone.localdate()
                 )[0].json()
 
     return render(request, "sample/index.html", context)
