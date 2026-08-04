@@ -1,11 +1,9 @@
+import logging
 from datetime import date
-from typing import Optional, Tuple
 
 import requests
 
 from .models import FitbitUser
-
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -44,7 +42,7 @@ def check_fitbit_access(fitbitUser: FitbitUser) -> bool:
 
 def daily_activity_summary(
     fitbitUser: FitbitUser, d: date
-) -> Tuple[Optional[requests.models.Response], Optional[Exception]]:
+) -> tuple[requests.models.Response | None, Exception | None]:
     """
     ref: https://dev.fitbit.com/build/reference/web-api/activity/get-daily-activity-summary/
     format: /1/user/[user-id]/activities/date/[date].json
@@ -57,7 +55,7 @@ def daily_activity_summary(
 
 def sleep_log_by_date(
     fitbitUser: FitbitUser, d: date
-) -> Tuple[Optional[requests.models.Response], Optional[Exception]]:
+) -> tuple[requests.models.Response | None, Exception | None]:
     """
     ref: https://dev.fitbit.com/build/reference/web-api/sleep/get-sleep-log-by-date/
     format: /1.2/user/[user-id]/sleep/date/[date].json
@@ -69,7 +67,7 @@ def sleep_log_by_date(
 
 def sleep_log_by_date_range(
     fitbitUser: FitbitUser, start_date: date, end_date: date
-) -> Tuple[Optional[requests.models.Response], Optional[Exception]]:
+) -> tuple[requests.models.Response | None, Exception | None]:
     """
     ref: https://dev.fitbit.com/build/reference/web-api/sleep/get-sleep-log-by-date-range/
     format: /1.2/user/[user-id]/sleep/date/[startDate]/[endDate].json
@@ -88,7 +86,7 @@ def sleep_log_by_date_range(
 
 def activity_intraday_by_date(
     fitbitUser: FitbitUser, activity: str, d: date, interval: str
-) -> Tuple[Optional[requests.models.Response], Optional[Exception]]:
+) -> tuple[requests.models.Response | None, Exception | None]:
     """
     ref: https://dev.fitbit.com/build/reference/web-api/intraday/get-activity-intraday-by-date/
     format:
@@ -112,7 +110,7 @@ def activity_intraday_by_date(
 
 def activity_timeseries_by_date(
     fitbitUser: FitbitUser, resource: str, d: date, period: str
-) -> Tuple[Optional[requests.models.Response], Optional[Exception]]:
+) -> tuple[requests.models.Response | None, Exception | None]:
     """
     ref: https://dev.fitbit.com/build/reference/web-api/activity-timeseries/get-activity-timeseries-by-date/
     format: /1/user/[user-id]/activities/[resource-path]/date/[date]/[period].json
@@ -156,7 +154,7 @@ def activity_timeseries_by_date(
 
 def activity_timeseries_by_date_range(
     fitbitUser: FitbitUser, resource: str, start_date: date, end_date: date
-) -> Tuple[Optional[requests.models.Response], Optional[Exception]]:
+) -> tuple[requests.models.Response | None, Exception | None]:
     """
     ref: https://dev.fitbit.com/build/reference/web-api/activity-timeseries/get-activity-timeseries-by-date-range/
     format: /1/user/[user-id]/activities/[resource-path]/date/[start-date]/[end-date].json
@@ -167,10 +165,7 @@ def activity_timeseries_by_date_range(
     if (
         resource in {"activityCalories", "tracker/activityCalories"}
         and (end_date - start_date).days > 30
-    ):
-        logger.info("Date range is too long, won't try to fetch data.")
-        return {}
-    elif (end_date - start_date).days > 1095:
+    ) or (end_date - start_date).days > 1095:
         logger.info("Date range is too long, won't try to fetch data.")
         return {}
     all_activity_resources = [
