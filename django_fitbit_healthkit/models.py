@@ -1,13 +1,12 @@
+import logging
 from ast import Dict
 from datetime import datetime, timedelta, timezone
-from typing import Optional, Tuple
 
 import requests
 from django.conf import settings
 from django.db import models
 
 from .util import encoded_secret
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +30,7 @@ class FitbitUser(models.Model):
             self.last_updated + timedelta(seconds=self.expires_in)
         )
 
-    def get_new_tokens(self) -> Tuple[Optional[Dict], Optional[Exception]]:
+    def get_new_tokens(self) -> tuple[Dict | None, Exception | None]:
         logger.info("Getting new tokens")
         if self.refresh_token is None or self.refresh_token == "":
             logger.info("No refresh token, can't get new tokens")
@@ -98,10 +97,10 @@ class FitbitUser(models.Model):
         self,
         request_type: str,
         *args,
-        headers: Optional[Dict] = {},
+        headers: Dict | None = {},
         max_fetch_attempts: int = 3,
         **kwargs,
-    ) -> Tuple[Optional[requests.models.Response], Optional[Exception]]:
+    ) -> tuple[requests.models.Response | None, Exception | None]:
         """
         Wrapper for requests.get and requests.post that will handle
         the token refresh and retries for the user credentials.

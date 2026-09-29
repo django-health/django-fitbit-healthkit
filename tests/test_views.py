@@ -1,11 +1,10 @@
-from django.test import TestCase
-from django.urls import reverse
-
 # path("login", views.login, name="fitbitlogin"),
 # path("success", views.success, name="fitbitsuccess"),
 # path("webhook", views.fitbit_subscription, name="fitbitsubscription"),
-
 from urllib.parse import urlparse
+
+from django.test import TestCase
+from django.urls import reverse
 
 
 class MyViewTest(TestCase):
