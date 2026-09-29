@@ -1,5 +1,6 @@
 # a simple view that just loads index.html
 # and puts the user in the context
+import logging
 from datetime import date
 
 from django.contrib.auth import login as auth_login
@@ -9,12 +10,11 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 
 from django_fitbit_healthkit.methods import (
-    check_fitbit_access,
     activity_intraday_by_date,
+    check_fitbit_access,
     daily_activity_summary,
     sleep_log_by_date,
 )
-import logging
 
 logger = logging.getLogger(__name__)
 

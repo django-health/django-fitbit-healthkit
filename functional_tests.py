@@ -8,6 +8,7 @@
 
 import os
 import time
+
 import django
 from django.conf import settings
 
@@ -18,10 +19,9 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sample.settings")
 django.setup()
 
 # Use playwright
-from playwright.sync_api import sync_playwright  # noqa: E402
-from playwright._impl._errors import TimeoutError  # noqa: E402
-
-from django.contrib.auth import get_user_model  # noqa: E402
+from django.contrib.auth import get_user_model
+from playwright._impl._errors import TimeoutError
+from playwright.sync_api import sync_playwright
 
 USERNAME = "testuser"
 PASSWORD = "Testpassword123"
