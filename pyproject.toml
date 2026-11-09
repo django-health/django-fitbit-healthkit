@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "django-fitbit-healthkit"
-version = "0.6.4"
-description = "A Django app to access Fitbit Web APIs."
+version = "0.7.0"
+description = "ARCHIVED: the Fitbit Web API no longer serves requests. Final release; use django-google-health."
 readme = "README.md"
 license = "BSD-3-Clause"
 authors = [

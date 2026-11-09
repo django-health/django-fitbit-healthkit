@@ -8,8 +8,10 @@
 > archived (read-only) and will not receive further updates, including security fixes.
 >
 > - Existing PyPI releases are left in place for reference but should be considered deprecated.
-> - Do not adopt this package for new work; migrate Fitbit-dependent integrations to a
->   data source that is still available.
+> - **v0.7.0 is the final release.** It emits a `FutureWarning` on import, a log warning at
+>   startup, and a Django system check warning (`fitbit.W001`) on every `manage.py` command.
+> - Do not adopt this package for new work. The successor is
+>   [django-google-health](https://github.com/django-health/django-google-health).
 
 django-fitbit-healthkit is a Django Fitbit App with HealthKit-friendly API.
 The goal is to provide a wrapper over fitbit authentication, token management, and web APIs
