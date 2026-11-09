@@ -1,19 +1,15 @@
 # django-fitbit-healthkit
 
-> ## ⚠️ DEPRECATED — Fitbit Web API is being shut down
+> ## 🗄️ ARCHIVED — the Fitbit Web API is no longer serving
 >
-> Google is [retiring the Fitbit Web API](https://dev.fitbit.com/build/reference/web-api/developer-updates/)
-> in **September 2026**. After that date this package will no longer function and will be archived.
+> As of the week of **November 9, 2026**, Google's
+> [retired Fitbit Web API](https://dev.fitbit.com/build/reference/web-api/developer-updates/)
+> no longer serves requests, so this package no longer works. The repository is
+> archived (read-only) and will not receive further updates, including security fixes.
 >
-> **What that means for users of this package:**
-> - Through the Fitbit Web API sunset (~September 2026), this project will receive
->   **security updates only** — no new features.
-> - After the API is shut down, the GitHub repository will be archived and the PyPI
->   release will be left in place but marked deprecated.
-> - If you are starting a new integration, do not adopt this package — pick a
->   data source that will still exist after September 2026.
->
-> If you depend on Fitbit data going forward, plan a migration off the Fitbit Web API now.
+> - Existing PyPI releases are left in place for reference but should be considered deprecated.
+> - Do not adopt this package for new work; migrate Fitbit-dependent integrations to a
+>   data source that is still available.
 
 django-fitbit-healthkit is a Django Fitbit App with HealthKit-friendly API.
 The goal is to provide a wrapper over fitbit authentication, token management, and web APIs
